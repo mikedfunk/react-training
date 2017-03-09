@@ -32,6 +32,19 @@ class CheckoutForm extends React.Component {
     }
   }
 
+  componentWillMount() {
+    const formState = localStorage.formState
+    if (formState) {
+      this.setState(JSON.parse(formState))
+    }
+  }
+
+  componentDidMount() {
+    window.onbeforeunload = () => {
+      localStorage.formState = JSON.stringify(this.state)
+    }
+  }
+
   onSameAsBillingCheck(event) {
     this.setState({ shippingSameAsBilling: event.target.checked })
   }
@@ -62,10 +75,10 @@ class CheckoutForm extends React.Component {
           <fieldset>
             <legend>Billing Address</legend>
             <p>
-              <label>Billing Name: <input type="text" onChange={this.handleBillingNameChange.bind(this)}/></label>
+              <label>Billing Name: <input type="text" defaultValue={this.state.billingName} onChange={this.handleBillingNameChange.bind(this)}/></label>
             </p>
             <p>
-              <label>Billing State: <input type="text" size="2" onChange={this.handleBillingStateChange.bind(this)}/></label>
+              <label>Billing State: <input type="text" size="2" defaultValue={this.state.billingState} onChange={this.handleBillingStateChange.bind(this)}/></label>
             </p>
           </fieldset>
 
