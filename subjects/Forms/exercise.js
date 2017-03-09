@@ -45,28 +45,6 @@ class CheckoutForm extends React.Component {
     }
   }
 
-  onSameAsBillingCheck(event) {
-    this.setState({ shippingSameAsBilling: event.target.checked })
-  }
-  getShippingName() {
-    return this.state.shippingSameAsBilling ? this.state.billingName : this.state.shippingName
-  }
-  getShippingState() {
-    return this.state.shippingSameAsBilling ? this.state.billingState : this.state.shippingState
-  }
-  handleBillingNameChange(event) {
-    this.setState({ billingName: event.target.value })
-  }
-  handleBillingStateChange(event) {
-    this.setState({ billingState: event.target.value })
-  }
-  handleShippingNameChange(event) {
-    this.setState({ shippingName: event.target.value })
-  }
-  handleShippingStateChange(event) {
-    this.setState({ shippingState: event.target.value })
-  }
-
   render() {
     return (
       <div>
@@ -75,23 +53,23 @@ class CheckoutForm extends React.Component {
           <fieldset>
             <legend>Billing Address</legend>
             <p>
-              <label>Billing Name: <input type="text" defaultValue={this.state.billingName} onChange={this.handleBillingNameChange.bind(this)}/></label>
+              <label>Billing Name: <input type="text" defaultValue={this.state.billingName} onChange={event => this.setState({ billingName: event.target.value })}/></label>
             </p>
             <p>
-              <label>Billing State: <input type="text" size="2" defaultValue={this.state.billingState} onChange={this.handleBillingStateChange.bind(this)}/></label>
+              <label>Billing State: <input type="text" size="2" defaultValue={this.state.billingState} onChange={event => this.setState({ billingState: event.target.value })}/></label>
             </p>
           </fieldset>
 
           <br/>
 
           <fieldset>
-            <label><input type="checkbox" name="same-as-billing" checked={this.state.shippingSameAsBilling} onChange={this.onSameAsBillingCheck.bind(this)} /> Same as billing</label>
+            <label><input type="checkbox" name="same-as-billing" checked={this.state.shippingSameAsBilling} onChange={event => this.setState({ shippingSameAsBilling: event.target.checked })} /> Same as billing</label>
             <legend>Shipping Address</legend>
             <p>
-              <label>Shipping Name: <input type="text" disabled={this.state.shippingSameAsBilling} value={this.getShippingName()} onChange={this.handleShippingNameChange.bind(this)}/></label>
+              <label>Shipping Name: <input type="text" disabled={this.state.shippingSameAsBilling} value={this.state.shippingSameAsBilling ? this.state.billingName : this.state.shippingName} onChange={event => this.setState({ shippingName: event.target.value })}/></label>
             </p>
             <p>
-              <label>Shipping State: <input type="text" size="2" value={this.getShippingState()} disabled={this.state.shippingSameAsBilling} onChange={this.handleShippingStateChange.bind(this)}/></label>
+              <label>Shipping State: <input type="text" size="2" value={this.state.shippingSameAsBilling ? this.state.billingState : this.state.shippingState} disabled={this.state.shippingSameAsBilling} onChange={event => this.setState({ shippingState: event.target.value })}/></label>
             </p>
           </fieldset>
 
