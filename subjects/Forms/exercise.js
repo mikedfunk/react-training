@@ -20,6 +20,40 @@ import ReactDOM from 'react-dom'
 import serializeForm from 'form-serialize'
 
 class CheckoutForm extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      shippingSameAsBilling: false,
+      billingName: '',
+      billingState: '',
+      shippingName: '',
+      shippingState: ''
+    }
+  }
+
+  onSameAsBillingCheck(event) {
+    this.setState({ shippingSameAsBilling: event.target.checked })
+  }
+  getShippingName() {
+    return this.state.shippingSameAsBilling ? this.state.billingName : this.state.shippingName
+  }
+  getShippingState() {
+    return this.state.shippingSameAsBilling ? this.state.billingState : this.state.shippingState
+  }
+  handleBillingNameChange(event) {
+    this.setState({ billingName: event.target.value })
+  }
+  handleBillingStateChange(event) {
+    this.setState({ billingState: event.target.value })
+  }
+  handleShippingNameChange(event) {
+    this.setState({ shippingName: event.target.value })
+  }
+  handleShippingStateChange(event) {
+    this.setState({ shippingState: event.target.value })
+  }
+
   render() {
     return (
       <div>
@@ -28,23 +62,23 @@ class CheckoutForm extends React.Component {
           <fieldset>
             <legend>Billing Address</legend>
             <p>
-              <label>Billing Name: <input type="text"/></label>
+              <label>Billing Name: <input type="text" onChange={this.handleBillingNameChange.bind(this)}/></label>
             </p>
             <p>
-              <label>Billing State: <input type="text" size="2"/></label>
+              <label>Billing State: <input type="text" size="2" onChange={this.handleBillingStateChange.bind(this)}/></label>
             </p>
           </fieldset>
 
           <br/>
 
           <fieldset>
-            <label><input type="checkbox"/> Same as billing</label>
+            <label><input type="checkbox" name="same-as-billing" checked={this.state.shippingSameAsBilling} onChange={this.onSameAsBillingCheck.bind(this)} /> Same as billing</label>
             <legend>Shipping Address</legend>
             <p>
-              <label>Shipping Name: <input type="text"/></label>
+              <label>Shipping Name: <input type="text" disabled={this.state.shippingSameAsBilling} value={this.getShippingName()} onChange={this.handleShippingNameChange.bind(this)}/></label>
             </p>
             <p>
-              <label>Shipping State: <input type="text" size="2"/></label>
+              <label>Shipping State: <input type="text" size="2" value={this.getShippingState()} disabled={this.state.shippingSameAsBilling} onChange={this.handleShippingStateChange.bind(this)}/></label>
             </p>
           </fieldset>
 
