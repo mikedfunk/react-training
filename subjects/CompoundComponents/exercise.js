@@ -37,20 +37,35 @@ class RadioGroup extends React.Component {
     defaultValue: PropTypes.string
   }
 
+  state = {
+    selectedIndex: 2
+  }
+
   render() {
-    return <div>{this.props.children}</div>
+    const children = React.Children.map(this.props.children, (child, index) => {
+      return React.cloneElement(child, {
+        activeIndex: index,
+        isActive: index === this.state.selectedIndex,
+        setSelectedIndex: selectedIndex => this.setState({ selectedIndex })
+      })
+    })
+    return <div>{children}</div>
   }
 }
 
 class RadioOption extends React.Component {
   static propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
+    isActive: PropTypes.bool
+  }
+  activate() {
+    this.props.setSelectedIndex(this.props.activeIndex)
   }
 
   render() {
     return (
       <div>
-        <RadioIcon isSelected={false}/> {this.props.children}
+        <RadioIcon isSelected={this.props.isActive} activate={this.activate.bind(this)} activeIndex={this.props.activeIndex}/> {this.props.children}
       </div>
     )
   }
@@ -74,6 +89,7 @@ class RadioIcon extends React.Component {
           cursor: 'pointer',
           background: this.props.isSelected ? 'rgba(0, 0, 0, 0.05)' : ''
         }}
+        onClick={this.props.activate}
       />
     )
   }
