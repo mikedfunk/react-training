@@ -17,25 +17,51 @@
 // - Implement a <ResetButton> that resets the <TextInput>s in the form
 //
 ////////////////////////////////////////////////////////////////////////////////
-import React from 'react'
+import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 
 class Form extends React.Component {
+  // specify schema of context data that can be passed down
+  static childContextTypes = {
+    handleSubmit: PropTypes.func.isRequired
+  }
+  // set the context for all children of this element
+  getChildContext() {
+    return { handleSubmit: this.handleSubmit }
+  }
+  // gets passed down in context
+  handleSubmit(event) {
+    console.log('test', event.target)
+  }
   render() {
     return <div>{this.props.children}</div>
   }
 }
 
 class SubmitButton extends React.Component {
+  // opt-in to this context data from up somewhere in parents
+  static contextTypes = {
+    handleSubmit: PropTypes.func.isRequired
+  }
   render() {
-    return <button>{this.props.children}</button>
+    return <button onClick={this.context.handleSubmit.bind(this)}>{this.props.children}</button>
   }
 }
 
 class TextInput extends React.Component {
+  // opt-in to this context data from up somewhere in parents
+  static contextTypes = {
+    handleSubmit: PropTypes.func.isRequired
+  }
+  handleKeyup(event) {
+    if (event.key === 'Enter') {
+      this.context.handleSubmit(event)
+    }
+  }
   render() {
     return (
       <input
+        onKeyUp={this.handleKeyup.bind(this)}
         type="text"
         name={this.props.name}
         placeholder={this.props.placeholder}
